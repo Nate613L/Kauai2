@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Kauai Itinerary · Hawaii</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#e8f6f5;
+  --bg2:#d0eeec;
+  --bg3:#c2e8e5;
+  --card:#ffffff;
+  --card2:#f2fafa;
+  --text:#1a3835;
+  --muted:#5a8580;
+  --border:rgba(0,140,130,0.18);
+  --border2:rgba(0,140,130,0.10);
+  --shadow:rgba(0,100,90,0.10);
+  --sun:#d4830a;
+  --mon:#0a9088;
+  --tue:#0878b8;
+  --wed:#7a40b0;
+  --extra:#9a7020;
+  --accent:#0a9088;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:700px;margin:0 auto;overflow-x:hidden}
+
+/* HEADER */
+.header{
+padding:44px 24px 28px;text-align:center;
+background:linear-gradient(160deg,#0a9088 0%,#0878b8 60%,#0a9088 100%);
+position:relative;overflow:hidden;
+}
+.header::before{content:’’;position:absolute;inset:0;background:url(“data:image/svg+xml,%3Csvg width=‘60’ height=‘60’ viewBox=‘0 0 60 60’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cg fill=‘none’ fill-rule=‘evenodd’%3E%3Cg fill=’%23ffffff’ fill-opacity=‘0.05’%3E%3Cpath d=‘M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z’/%3E%3C/g%3E%3C/g%3E%3C/svg%3E”);pointer-events:none}
+.eyebrow{font-weight:400;font-size:11px;letter-spacing:5px;color:rgba(255,255,255,0.85);text-transform:uppercase;margin-bottom:14px}
+.h-title{font-family:‘Cormorant Garamond’,serif;font-weight:300;font-size:clamp(32px,8vw,54px);color:#fff;letter-spacing:1px;line-height:1.05;margin-bottom:12px;text-shadow:0 2px 20px rgba(0,0,0,0.2)}
+.h-sub{font-size:13px;color:rgba(255,255,255,0.8);letter-spacing:.5px}
+.preg-pill{display:inline-block;margin-top:14px;padding:6px 16px;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);border-radius:20px;font-size:11px;color:#fff;letter-spacing:.5px;backdrop-filter:blur(4px)}
+
+/* TABS */
+.tabs{display:flex;gap:6px;padding:16px 14px;overflow-x:auto;scrollbar-width:none;background:var(–bg2);border-bottom:2px solid var(–border)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:72px;padding:10px 5px;background:#fff;border:1.5px solid var(–border2);border-radius:12px;cursor:pointer;color:var(–muted);font-family:‘Jost’,sans-serif;font-size:10px;font-weight:500;text-align:center;transition:all .2s;box-shadow:0 1px 4px var(–shadow)}
+.tab .tday{font-size:10px;font-weight:600;margin-bottom:3px;letter-spacing:.3px}
+.tab .tcount{font-size:9px;opacity:.7;font-weight:300}
+.tab.a-sun{background:linear-gradient(135deg,#fff8ee,#fff3dd);border-color:rgba(212,131,10,.5);color:var(–sun);box-shadow:0 2px 8px rgba(212,131,10,.2)}
+.tab.a-mon{background:linear-gradient(135deg,#e8faf9,#d0f0ee);border-color:rgba(10,144,136,.5);color:var(–mon);box-shadow:0 2px 8px rgba(10,144,136,.2)}
+.tab.a-tue{background:linear-gradient(135deg,#e8f3fc,#d0e8f8);border-color:rgba(8,120,184,.5);color:var(–tue);box-shadow:0 2px 8px rgba(8,120,184,.2)}
+.tab.a-wed{background:linear-gradient(135deg,#f2eeff,#e8dcff);border-color:rgba(122,64,176,.5);color:var(–wed);box-shadow:0 2px 8px rgba(122,64,176,.2)}
+.tab.a-extra{background:linear-gradient(135deg,#fdf8ee,#f8edcc);border-color:rgba(154,112,32,.5);color:var(–extra);box-shadow:0 2px 8px rgba(154,112,32,.2)}
+
+/* PANELS */
+.panel{display:none}.panel.active{display:block}
+.day-hdr{margin:16px 16px 10px;padding:14px 18px;border-radius:14px;box-shadow:0 2px 8px var(–shadow)}
+.day-hdr-name{font-size:18px;margin-bottom:4px;font-family:‘Cormorant Garamond’,serif;font-weight:600}
+.day-hdr-sub{font-size:12px;font-weight:300;opacity:.8}
+.day-note{margin:0 16px 12px;padding:10px 14px;border-radius:10px;font-size:12px;font-weight:300;line-height:1.65;background:rgba(10,144,136,0.07);border:1px solid var(–border);color:var(–muted)}
+
+/* CARDS */
+.stops{padding:4px 16px 28px;display:flex;flex-direction:column;gap:9px}
+.card{display:flex;align-items:center;gap:12px;background:var(–card);border:1.5px solid var(–border2);border-radius:14px;padding:12px 14px;cursor:pointer;text-align:left;width:100%;transition:all .18s;box-shadow:0 2px 8px var(–shadow);font-family:‘Jost’,sans-serif}
+.card:hover,.card:active{background:var(–card2);border-color:rgba(10,144,136,.4);box-shadow:0 4px 16px var(–shadow);transform:translateY(-1px)}
+.cnum{width:28px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600}
+.cthumb{width:66px;min-width:66px;height:66px;border-radius:12px;overflow:hidden;background:var(–bg3);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;box-shadow:0 1px 4px var(–shadow)}
+.cthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cinfo{flex:1;min-width:0}
+.cbadges{display:flex;align-items:center;gap:5px;margin-bottom:5px;flex-wrap:wrap}
+.ctag{font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;letter-spacing:.5px}
+.ctime{font-size:11px;color:var(–muted);font-weight:300}
+.cname{font-size:15px;color:var(–text);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:‘Cormorant Garamond’,serif;font-weight:600}
+.ctype{font-size:11px;color:var(–muted);font-weight:300}
+.carrow{color:var(–accent);font-size:22px;padding-left:4px;flex-shrink:0;opacity:.6}
+
+/* PREGNANCY BADGE */
+.pbadge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:5px;letter-spacing:.4px;white-space:nowrap}
+.p-ok{background:rgba(16,185,129,.12);color:#0a8060;border:1px solid rgba(16,185,129,.3)}
+.p-cau{background:rgba(245,158,11,.12);color:#9a6000;border:1px solid rgba(245,158,11,.3)}
+
+/* EXTRAS */
+.extras-intro{margin:14px 16px 14px;padding:14px 16px;background:rgba(154,112,32,.07);border:1px solid rgba(154,112,32,.2);border-radius:12px;font-size:13px;color:#6a5010;font-weight:300;line-height:1.7}
+.extras-intro strong{color:var(–extra);font-weight:600}
+.extra-group{padding:0 16px;margin-bottom:22px}
+.extra-group-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(–extra);margin-bottom:10px;padding-bottom:7px;border-bottom:2px solid rgba(154,112,32,.15);font-weight:600}
+.extra-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(–border2);align-items:flex-start}
+.extra-item:last-child{border-bottom:none}
+.extra-emoji{font-size:20px;flex-shrink:0;margin-top:2px}
+.extra-name{font-size:14px;color:var(–text);font-family:‘Cormorant Garamond’,serif;font-weight:600;margin-bottom:3px}
+.extra-why{font-size:12px;color:var(–muted);font-weight:300;line-height:1.6}
+.extra-preg{font-size:10px;margin-top:5px}
+
+/* MODAL OVERLAY - tap anywhere above card to dismiss */
+.overlay{display:none;position:fixed;inset:0;z-index:200;flex-direction:column;justify-content:flex-end;cursor:pointer}
+.overlay.open{display:flex}
+.overlay-bg{position:absolute;inset:0;background:rgba(0,60,55,0.55);backdrop-filter:blur(3px)}
+
+/* MODAL CARD */
+.modal{
+position:relative;z-index:10;
+background:linear-gradient(180deg,#f0fafa 0%,#fff 40%);
+border-radius:24px 24px 0 0;
+width:100%;max-width:700px;margin:0 auto;
+max-height:88vh;overflow-y:auto;
+border-top:2px solid rgba(10,144,136,.2);
+box-shadow:0 -8px 40px rgba(0,100,90,0.25);
+animation:up .28s cubic-bezier(.32,0,.67,0);
+cursor:default;
+}
+@keyframes up{from{transform:translateY(80px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* Drag handle hint */
+.modal-handle{width:40px;height:4px;background:rgba(10,144,136,.3);border-radius:2px;margin:12px auto 0;cursor:pointer}
+
+.mhero{position:relative;height:240px;overflow:hidden;background:var(–bg3);display:flex;align-items:center;justify-content:center;font-size:72px}
+.mhero img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0}
+.mgrad{position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(240,250,250,.98) 100%)}
+.mclose{
+position:absolute;top:12px;right:12px;
+width:32px;height:32px;border-radius:50%;
+background:rgba(255,255,255,0.85);
+border:1.5px solid rgba(10,144,136,.3);
+color:var(–accent);font-size:18px;cursor:pointer;
+display:flex;align-items:center;justify-content:center;
+z-index:10;font-family:‘Jost’,sans-serif;
+box-shadow:0 2px 8px rgba(0,100,90,.15);
+}
+.mtap-hint{
+position:absolute;top:12px;left:12px;z-index:10;
+font-size:10px;color:rgba(255,255,255,0.8);
+background:rgba(0,0,0,0.3);padding:3px 8px;border-radius:10px;
+letter-spacing:.3px;
+}
+.mtag-wrap{position:absolute;bottom:14px;left:18px;z-index:10}
+.mbody{padding:18px 22px 40px}
+.mtype{font-size:12px;color:var(–muted);margin-bottom:4px;font-weight:300}
+.mtitle{font-family:‘Cormorant Garamond’,serif;font-size:clamp(22px,5vw,30px);font-weight:600;color:var(–text);margin-bottom:6px;letter-spacing:.3px}
+.mdur{font-size:12px;color:var(–accent);margin-bottom:18px;font-weight:400}
+.mdesc{font-size:14px;line-height:1.85;color:#2a5550;margin-bottom:18px;font-weight:300}
+.mpreg{margin-bottom:16px;padding:13px 16px;border-radius:12px;font-size:13px;line-height:1.65;font-weight:300}
+.mtips{background:rgba(10,144,136,.07);border:1.5px solid rgba(10,144,136,.2);border-radius:12px;padding:14px 16px}
+.mtips-title{font-size:10px;letter-spacing:2px;color:var(–accent);margin-bottom:8px;text-transform:uppercase;font-weight:600}
+.mtips-text{font-size:13px;color:#2a6560;line-height:1.7;font-weight:300}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Kauai · The Garden Isle · Hawaii</div>
+  <h1 class="h-title">The Kauai<br>Itinerary</h1>
+  <div class="h-sub">Sunday Evening → Wednesday Night</div>
+  <div class="preg-pill">🤰 Pregnancy-Safe Edition · 1–3 Months</div>
+</div>
+
+<div class="tabs">
+  <button class="tab a-sun" data-day="sun" onclick="switchDay('sun')"><div class="tday">SUN</div><div class="tcount">1 stop</div></button>
+  <button class="tab" data-day="mon" onclick="switchDay('mon')"><div class="tday">MON</div><div class="tcount">5 stops</div></button>
+  <button class="tab" data-day="tue" onclick="switchDay('tue')"><div class="tday">TUE</div><div class="tcount">5 stops</div></button>
+  <button class="tab" data-day="wed" onclick="switchDay('wed')"><div class="tday">WED</div><div class="tcount">5 stops</div></button>
+  <button class="tab" data-day="extra" onclick="switchDay('extra')"><div class="tday">EXTRAS</div><div class="tcount">bonus</div></button>
+</div>
+
+<!-- SUNDAY -->
+
+<div class="panel active" id="panel-sun">
+  <div class="day-hdr" style="background:linear-gradient(135deg,#fff8ee,#fff3dd);border:1.5px solid rgba(212,131,10,.3)">
+    <div class="day-hdr-name" style="color:var(--sun)">Sunday Evening — Arrival</div>
+    <div class="day-hdr-sub" style="color:rgba(180,100,0,.7)">Land · One Easy Stop · Settle In</div>
+  </div>
+  <div class="day-note">Arriving around 6 PM — pick up the car, one beautiful effortless stop 5 minutes from the airport, then head to your accommodation and rest up for the full days ahead.</div>
+  <div class="stops" id="stops-sun"></div>
+</div>
+
+<!-- MONDAY -->
+
+<div class="panel" id="panel-mon">
+  <div class="day-hdr" style="background:linear-gradient(135deg,#e8faf9,#d0f0ee);border:1.5px solid rgba(10,144,136,.3)">
+    <div class="day-hdr-name" style="color:var(--mon)">Monday — North Shore Day</div>
+    <div class="day-hdr-sub" style="color:rgba(0,110,100,.7)">Hanalei Bay · Kīlauea · Kē'ē Beach · Nā Pali Sunset</div>
+  </div>
+  <div class="day-note">The legendary north shore — Kauai's most photogenic coastline. Hanalei Bay, the famous lighthouse, the end of the road at Nā Pali, and the island's best views.</div>
+  <div class="stops" id="stops-mon"></div>
+</div>
+
+<!-- TUESDAY -->
+
+<div class="panel" id="panel-tue">
+  <div class="day-hdr" style="background:linear-gradient(135deg,#e8f3fc,#d0e8f8);border:1.5px solid rgba(8,120,184,.3)">
+    <div class="day-hdr-name" style="color:var(--tue)">Tuesday — Canyon & South Shore</div>
+    <div class="day-hdr-sub" style="color:rgba(0,80,150,.7)">Waimea Canyon · Kalalau · Koloa Town · Spouting Horn · Poipū</div>
+  </div>
+  <div class="day-note">Red canyon walls in the morning, charming small town at midday, dramatic blowholes, and Kauai's best beach for the afternoon — the contrast day.</div>
+  <div class="stops" id="stops-tue"></div>
+</div>
+
+<!-- WEDNESDAY -->
+
+<div class="panel" id="panel-wed">
+  <div class="day-hdr" style="background:linear-gradient(135deg,#f2eeff,#e8dcff);border:1.5px solid rgba(122,64,176,.3)">
+    <div class="day-hdr-name" style="color:var(--wed)">Wednesday — East Side & Farewell</div>
+    <div class="day-hdr-sub" style="color:rgba(90,40,140,.7)">Wailua Falls · Fern Grotto · Dolphins · Lydgate · Final Sunset</div>
+  </div>
+  <div class="day-note">The beautiful east side to finish — a drive-up waterfall, a jungle river boat, wild dolphins on the water, a protected snorkel lagoon, and a perfect final sunset.</div>
+  <div class="stops" id="stops-wed"></div>
+</div>
+
+<!-- EXTRAS -->
+
+<div class="panel" id="panel-extra">
+  <div class="day-hdr" style="background:linear-gradient(135deg,#fdf8ee,#f8edcc);border:1.5px solid rgba(154,112,32,.3)">
+    <div class="day-hdr-name" style="color:var(--extra)">Bonus & Extras</div>
+    <div class="day-hdr-sub" style="color:rgba(120,85,10,.7)">Activities cut for time, intensity, or pregnancy — plus future trip highlights</div>
+  </div>
+  <div class="extras-intro">These are the experiences that didn't make the main itinerary. Some are <strong>great add-ons</strong> if a day opens up. Many are <strong>top priorities for a future non-pregnant trip</strong> — especially the helicopter, Nā Pali boat tour, and surfing.</div>
+
+  <div class="extra-group">
+    <div class="extra-group-title">🚁 Helicopter Tour (Nā Pali + Interior)</div>
+    <div class="extra-item"><div class="extra-emoji">🚁</div><div><div class="extra-name">Doors-Off Helicopter — Jack Harter or Blue Hawaiian</div><div class="extra-why">The single most spectacular thing you can do on Kauai — over 65% of the island is only reachable by air. Soaring along the full Nā Pali cliffs, diving into Waimea Canyon from above, and hovering over Jurassic Falls. Non-negotiable for a non-pregnant return visit. Cut here due to vibration, altitude exposure, and seatbelt harness concerns during early pregnancy.</div><div class="extra-preg" style="color:#c00;font-size:11px">✗ AVOID during pregnancy — book for a future trip instead</div></div></div>
+  </div>
+
+  <div class="extra-group">
+    <div class="extra-group-title">🤿 Nā Pali Coast Boat Tours</div>
+    <div class="extra-item"><div class="extra-emoji">🚤</div><div><div class="extra-name">Nā Pali Snorkel & Sea Cave Boat Tour</div><div class="extra-why">A catamaran cruise along the full Nā Pali Coast with snorkeling and entry into dramatic sea caves — one of the most spectacular boat tours in all of Hawaii. The open-ocean swells around the Nā Pali can be very rough, and small-boat motion is not suitable in early pregnancy. This is #1 on the future-trip list.</div><div class="extra-preg" style="color:#c00;font-size:11px">✗ AVOID — open Pacific swells, physical boat impact in early pregnancy</div></div></div>
+  </div>
+
+  <div class="extra-group">
+    <div class="extra-group-title">🏄 Surfing</div>
+    <div class="extra-item"><div class="extra-emoji">🏄</div><div><div class="extra-name">Beginner Surf Lessons — Poipū or Hanalei</div><div class="extra-why">Kauai has excellent beginner surf spots. Hanalei Bay has surf schools right on the beach. Poipū has calmer, smaller waves for true beginners. Falls and board impacts make this unsuitable during pregnancy. A must-do on a future visit.</div><div class="extra-preg" style="color:#c00;font-size:11px">✗ AVOID — fall risk, board impact during pregnancy</div></div></div>
+  </div>
+
+  <div class="extra-group">
+    <div class="extra-group-title">🚜 ATV Tours</div>
+    <div class="extra-item"><div class="extra-emoji">🚜</div><div><div class="extra-name">Kauai ATV Tour (Kipu Ranch or Kualoa-style)</div><div class="extra-why">Off-road ATV tours through Kauai's lush interior terrain — Kipu Ranch and similar operators offer guided rides through valleys and jungle. The rough terrain, bumping, and vibration make this unsuitable during pregnancy. Hugely fun on a non-pregnant visit.</div><div class="extra-preg" style="color:#c00;font-size:11px">✗ AVOID — rough terrain vibration and bumping during pregnancy</div></div></div>
+  </div>
+
+  <div class="extra-group">
+    <div class="extra-group-title">🐋 Whale & Dolphin Watching (by Boat)</div>
+    <div class="extra-item"><div class="extra-emoji">🐬</div><div><div class="extra-name">Dedicated Dolphin & Whale Watch Boat Tour</div><div class="extra-why">Kauai's waters are excellent for spinner dolphins and humpback whales (November–April peak). A dedicated tour gets you close. Zodiac-style boats are too rough during pregnancy — but a larger catamaran in calm conditions on the south shore is more manageable. Check sea conditions on the day. Included Wednesday as a calmer-water dolphin option near the harbor.</div><div class="extra-preg"><span class="pbadge p-cau">⚠ CAUTION</span> — large stable vessel only; avoid zodiac-style boats; check conditions</div></div></div>
+  </div>
+
+  <div class="extra-group">
+    <div class="extra-group-title">🌿 North Shore Add-Ons</div>
+    <div class="extra-item"><div class="extra-emoji">🌊</div><div><div class="extra-name">Tunnels Beach (Makua Beach)</div><div class="extra-why">One of Kauai's best snorkel beaches — sea turtles, coral reef, dramatic mountain backdrop. Calm and shallow in good conditions. Great add-on Monday if schedule is relaxed.</div><div class="extra-preg"><span class="pbadge p-ok">✓ SAFE</span> — calm water snorkeling fine in early pregnancy; avoid if surf is up</div></div></div>
+    <div class="extra-item"><div class="extra-emoji">🍫</div><div><div class="extra-name">Princeville Botanical Gardens (Chocolate Farm Tour)</div><div class="extra-why">A private garden on the north shore with tasting from one of the world's highest-rated cacao farms. Gentle walk, unique, beautiful. Good Monday afternoon add-on if energy allows.</div><div class="extra-preg"><span class="pbadge p-ok">✓ SAFE</span> — flat garden walk; chocolate fine in moderation during pregnancy</div></div></div>
+  </div>
+
+  <div class="extra-group">
+    <div class="extra-group-title">🏊 Skipped — Unsafe During Pregnancy</div>
+    <div class="extra-item"><div class="extra-emoji">🌊</div><div><div class="extra-name">Queen's Bath</div><div class="extra-why">A stunning natural tidal pool in the lava rock near Princeville — one of Kauai's most photographed spots. Access requires crossing slippery lava rocks with unpredictable wave surge. Genuinely dangerous in any condition during pregnancy.</div><div class="extra-preg" style="color:#c00;font-size:11px">✗ AVOID — slippery lava access, deadly wave surge history</div></div></div>
+    <div class="extra-item"><div class="extra-emoji">🧗</div><div><div class="extra-name">Zip-lining</div><div class="extra-why">Kauai has excellent zip-line tours through jungle canopy. All operators explicitly exclude pregnant guests. Great for a future visit.</div><div class="extra-preg" style="color:#c00;font-size:11px">✗ AVOID — all operators exclude pregnant guests by policy</div></div></div>
+    <div class="extra-item"><div class="extra-emoji">🥾</div><div><div class="extra-name">Kalalau Trail (full Nā Pali hike)</div><div class="extra-why">11 miles of rugged exposed Nā Pali coastline — one of the world's great hikes. Requires permit 30 days in advance. Strenuous, remote, no medical access. One of the world's great future-trip experiences.</div><div class="extra-preg" style="color:#c00;font-size:11px">✗ AVOID — strenuous, remote, exposed cliffs, no rescue access</div></div></div>
+  </div>
+
+  <div style="height:40px"></div>
+</div>
+
+<!-- MODAL — tap the dark overlay behind the card to dismiss -->
+
+<div class="overlay" id="overlay">
+  <div class="overlay-bg" onclick="closeModal()"></div>
+  <div class="modal" id="modal-card">
+    <div class="modal-handle" onclick="closeModal()" title="Tap to close"></div>
+    <div class="mhero" id="mhero">
+      <span id="memoji" style="position:relative;z-index:1"></span>
+      <img id="mimg" src="" alt=""/>
+      <div class="mgrad"></div>
+      <button class="mclose" onclick="closeModal()">×</button>
+      <div class="mtap-hint">tap outside to close</div>
+      <div class="mtag-wrap"><span id="mtag" class="ctag"></span></div>
+    </div>
+    <div class="mbody">
+      <div class="mtype" id="mtype"></div>
+      <div class="mtitle" id="mtitle"></div>
+      <div class="mdur" id="mdur"></div>
+      <div class="mdesc" id="mdesc"></div>
+      <div class="mpreg" id="mpreg"></div>
+      <div class="mtips">
+        <div class="mtips-title">Insider Tips</div>
+        <div class="mtips-text" id="mtips"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DAYS = {
+  sun:{accent:'#d4830a',numBg:'rgba(212,131,10,.12)',numBorder:'rgba(212,131,10,.5)',stops:[
+    {name:'Kalapakī Beach — Arrival Sunset',emoji:'🌅',type:'Calm Bay Beach · 5 Min from Airport',tag:'ARRIVAL',tagColor:'#f97316',
+     time:'~6:30 PM',duration:'Easy 30–45 min arrival stop',
+     img:'https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Wailua_Beach_Kauai.jpg/800px-Wailua_Beach_Kauai.jpg',
+     desc:'Just 5 minutes from Lihue Airport, Kalapakī is a wide, sheltered, calm bay backed by lush green mountains — one of Kauai\'s most protected beaches. A perfect gentle ritual to begin the trip: find a spot on the sand, wade in the calm water, and watch the sky turn gold and pink as the sun drops over the island.',
+     preg:'ok',pregNote:'Perfect arrival activity during pregnancy. Flat, calm, sheltered water with no surf. Completely effortless — just breathe in the Hawaiian air and let the journey sink in. The calm bay is safe for a gentle wade.',
+     tips:'You\'ll pass right by Kalapakī on the way from the airport — it\'s in front of the Marriott resort on Nawiliwili Bay. Park at the lot near the beach access. Takes 30–45 min then head straight to your accommodation and rest up for the big days ahead.'}
+  ]},
+
+  mon:{accent:'#0a9088',numBg:'rgba(10,144,136,.1)',numBorder:'rgba(10,144,136,.5)',stops:[
+    {name:'Hanalei Bay & Pier',emoji:'🏖️',type:'Kauai\'s Most Iconic Bay',tag:'UNMISSABLE',tagColor:'#dc2626',
+     time:'9:00 AM',duration:'9:00 – 11:00 AM',
+     img:'https://images.pexels.com/photos/2100804/pexels-photo-2100804.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Hanalei_Bay_from_above.jpg/800px-Hanalei_Bay_from_above.jpg',
+     desc:'One of the most beautiful bays in the world — a vast perfect crescent of golden sand backed by dramatic fluted green mountains rising straight from the valley floor. The old wooden Hanalei Pier stretches into turquoise water framing the mountains perfectly behind it. From your list: this IS the gorgeous beach with scenic mountains right next to it.',
+     preg:'ok',pregNote:'Completely safe. Flat beach with easy walking. The water is calm enough for a gentle swim in most conditions — always check the surf level before entering. The pier walk is easy and flat with no exertion.',
+     tips:'Walk to the end of the Hanalei Pier for the best photo looking back at the mountains. Come early before crowds arrive. Mountains are clearest in the morning light before afternoon clouds roll in. The charming Hanalei town is a 5-min walk from the beach — great for a browse.'},
+    {name:'Hanalei Town',emoji:'🏘️',type:'Kauai\'s Most Charming Small Town',tag:'EXPLORE',tagColor:'#8b5cf6',
+     time:'11:15 AM',duration:'11:15 AM – 12:30 PM',
+     img:'https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Hanalei_town_kauai.jpg/800px-Hanalei_town_kauai.jpg',
+     desc:'Hanalei town is exactly what a Hawaiian beach town should feel like — a single main street of surf shops, local restaurants, art galleries, and laid-back locals. The 1912 steel bridge you cross to enter is one of the most photographed in Hawaii. Browse the Hanalei Farmers Market if it\'s running, grab a smoothie, and soak in the aloha spirit.',
+     preg:'ok',pregNote:'Perfect pregnancy stop — flat, slow, and completely relaxed. Great time to sit, have a snack, and simply enjoy the town\'s atmosphere. Many local juice and smoothie spots.',
+     tips:'Don\'t miss the old green Waioli Huiia Church (the famous white church with the green mountains behind it — one of the most photographed buildings in Hawaii). The Hanalei Farmers Market runs Tuesday, Thursday, and Saturday morning — worth timing for.'},
+    {name:'Kīlauea Lighthouse & Wildlife Refuge',emoji:'🦅',type:'Sea Cliff Lighthouse · Seabird Sanctuary',tag:'WILDLIFE',tagColor:'#10b981',
+     time:'1:30 PM',duration:'1:30 – 3:00 PM',
+     img:'https://images.pexels.com/photos/3601094/pexels-photo-3601094.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Kilauea_Lighthouse.jpg/800px-Kilauea_Lighthouse.jpg',
+     desc:'Perched on a dramatic sea cliff on Kauai\'s northern tip, the historic Kīlauea Lighthouse overlooks the open Pacific. The surrounding national wildlife refuge is home to red-footed boobies, Laysan albatrosses, great frigatebirds, and Hawaiian monk seals on the rocks below. From your list — this is the scenic coastal lookout point on the north side. ~$10 entry.',
+     preg:'ok',pregNote:'Excellent pregnancy-safe activity. Flat paved paths to the lighthouse and viewpoints. No exertion needed. Bring binoculars for the seabird colonies. The albatross nesting season Nov–July means you may see chicks being raised right next to the path.',
+     tips:'Reservations sometimes required — check nps.gov before going. Arrive early to avoid peak crowds. The monk seal is frequently spotted on the rocks below the lighthouse viewpoint. Stay 50 ft from monk seals — federal law strictly enforced.'},
+    {name:'Hā\'ena State Park & Kē\'ē Beach',emoji:'🌊',type:'End of the Road · Nā Pali Begins Here',tag:'SCENIC',tagColor:'#0ea5e9',
+     time:'3:30 PM',duration:'3:30 – 5:30 PM',
+     img:'https://images.pexels.com/photos/22589468/pexels-photo-22589468.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Ke%27e_Beach%2C_Kauai.jpg/800px-Ke%27e_Beach%2C_Kauai.jpg',
+     desc:'The literal end of the road on Kauai\'s north shore — where the highway stops and the Nā Pali wilderness begins. Kē\'ē Beach is a protected calm cove with impossibly clear water, flanked by the first dramatic green spires of the Nā Pali Coast rising straight from the sea. Standing here you look directly into the beginning of one of the most dramatic coastlines on earth.',
+     preg:'ok',pregNote:'Safe. Kē\'ē Beach is sheltered and usually calm — suitable for a gentle swim in good conditions. Avoid if any surf advisory is posted. Beautiful just for sitting, wading, and taking in the view.',
+     tips:'Reservations required to drive in — book 30 days in advance at gostateparks.hawaii.gov. A shuttle also runs from the Hā\'ena parking area. Ask the lifeguard about current water conditions. The trailhead for the famous Kalalau Trail starts here — you can walk the first 200m for a dramatic first look.'},
+    {name:'Hanalei Bay Sunset',emoji:'🌅',type:'North Shore Golden Hour',tag:'SUNSET',tagColor:'#f97316',
+     time:'~6:30 PM',duration:'Sunset watch',
+     img:'https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Hanalei_Bay_sunset.jpg/800px-Hanalei_Bay_sunset.jpg',
+     desc:'End the day back at Hanalei Bay as the sun drops behind the mountains. The same extraordinary bay you started the morning at, now bathed in deep amber and gold. The mountains turn purple and the pier silhouettes against the glowing Pacific sky. One of the great sunsets in all of Hawaii.',
+     preg:'ok',pregNote:'Perfect end-of-day for early pregnancy. Flat beach, zero effort, pure beauty. Find a spot on the sand or walk to the end of the pier and simply watch the sky change.',
+     tips:'Arrive 30 min before sunset for the full color build. The pier gives the best mountain-framing in the last light. Bring a light layer — it cools noticeably after the sun drops behind the ridgeline.'}
+  ]},
+
+  tue:{accent:'#0878b8',numBg:'rgba(8,120,184,.1)',numBorder:'rgba(8,120,184,.5)',stops:[
+    {name:'Waimea Canyon — Drive-Up Lookouts',emoji:'🏜️',type:'The Grand Canyon of the Pacific',tag:'UNMISSABLE',tagColor:'#dc2626',
+     time:'8:30 AM',duration:'8:30 – 11:00 AM',
+     img:'https://images.pexels.com/photos/21612345/pexels-photo-21612345.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Waimea_canyon.jpg/800px-Waimea_canyon.jpg',
+     desc:'Waimea Canyon stretches 14 miles long and 3,600 feet deep — an extraordinary red-walled canyon carved into the heart of Kauai that looks nothing like the rest of the tropical island. Multiple drive-up lookout points reveal the full dramatic scale from different angles. Absolutely nothing else in Hawaii looks remotely like this.',
+     preg:'ok',pregNote:'Safe at the drive-up lookout points — short paved flat walks to railed viewpoints. Do not attempt any canyon descent trails during pregnancy. The lookouts give full dramatic views with zero physical exertion.',
+     tips:'Stop at the main Waimea Canyon Lookout first, then drive the extra 5 min up to Kōkeʻe State Park for the Kalalau Lookout. Morning is best before afternoon clouds fill the canyon. Entry: $25 parking + $5 per person.'},
+    {name:'Kalalau Valley Lookout',emoji:'👁️',type:'Nā Pali Vista · 4,000 Feet Up',tag:'TOP RATED',tagColor:'#f59e0b',
+     time:'11:15 AM',duration:'11:15 AM – 12:00 PM',
+     img:'https://images.pexels.com/photos/3601425/pexels-photo-3601425.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Kalalau_Valley.jpg/800px-Kalalau_Valley.jpg',
+     desc:'Continue up the road past Waimea Canyon to the Kalalau Lookout — a perch at 4,000 feet gazing directly into the deep green Kalalau Valley with the Nā Pali cliffs plunging to the invisible ocean far below. On a clear day this is one of the most breathtaking viewpoints in the entire Hawaiian Islands. From your list: try for a sunny day — worth waiting for clouds to clear.',
+     preg:'ok',pregNote:'Safe — very short flat walk from the car park to the railed lookout. The elevation (4,000 ft) may cause mild breathlessness — take it slowly and rest if needed.',
+     tips:'If clouds are covering the valley when you arrive, wait 15–20 minutes — they regularly shift and clear. The Pu\'u O Kila Lookout 1.5 miles further up gives an even wider angle. Only attempt it if energy is good.'},
+    {name:'Koloa Town',emoji:'🏡',type:'Historic Sugar Town · South Shore',tag:'EXPLORE',tagColor:'#8b5cf6',
+     time:'1:00 PM',duration:'1:00 – 2:00 PM',
+     img:'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Koloa_Town_Kauai.jpg/800px-Koloa_Town_Kauai.jpg',
+     desc:'Koloa is Kauai\'s first plantation town — a charming strip of historic wooden buildings housing surf shops, local boutiques, art galleries, and Kauai\'s famous shave ice stands. From your list: south side town visit. Low-key, local, and a great place to browse and pick up a souvenir before heading to the coast.',
+     preg:'ok',pregNote:'Perfect midday pregnancy stop — flat, shaded walkways, easy to rest. Try the shave ice (a must). Great opportunity to sit, snack, and recharge before the beach.',
+     tips:'Don\'t miss JoJo\'s Shave Ice — consistently rated one of the best on the island. The old sugar mill chimney and historic buildings along the main street give a real sense of Kauai\'s plantation history.'},
+    {name:'Spouting Horn Blowhole',emoji:'💦',type:'Natural Lava Blowhole · Dramatic Spray',tag:'UNIQUE',tagColor:'#6366f1',
+     time:'2:15 PM',duration:'2:15 – 3:00 PM',
+     img:'https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Spouting_Horn%2C_Kauai%2C_Hawaii%2C_USA.jpg/800px-Spouting_Horn%2C_Kauai%2C_Hawaii%2C_USA.jpg',
+     desc:'A natural lava blowhole on Kauai\'s south shore where Pacific waves surge through an underground lava tube and shoot a geyser of seawater 30–50 feet into the air with a deep thunderous boom. The show repeats every few minutes and never gets old. The surrounding coastline is also spectacular.',
+     preg:'ok',pregNote:'Safe — a paved flat path leads to a railed viewing area. Stay behind the barriers at all times. The wave surge near the actual lava ledge is unpredictable and dangerous.',
+     tips:'Free to visit — just pay for parking. The bigger the swell, the more dramatic the eruption. A local vendor sells handmade jewelry on site — a great spot for a souvenir. Combine with Poipū Beach just 5 min down the road.'},
+    {name:'Poipū Beach',emoji:'🐢',type:'Best Beach on Kauai · Sea Turtles',tag:'SWIM',tagColor:'#0ea5e9',
+     time:'3:15 PM',duration:'3:15 – sunset',
+     img:'https://images.pexels.com/photos/3278215/pexels-photo-3278215.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Poipu_Beach%2C_Kauai.jpg/800px-Poipu_Beach%2C_Kauai.jpg',
+     desc:'Consistently ranked one of America\'s best beaches — Poipū has a sheltered western cove perfect for swimming and an eastern reef where Hawaiian green sea turtles (honu) rest on the rocks most afternoons. Hawaiian monk seals also haul out here regularly. Spend the rest of the afternoon here and stay for the stunning south shore sunset.',
+     preg:'ok',pregNote:'One of the most pregnancy-friendly beaches on the island. The sheltered western cove is calm, warm, and shallow. Perfect for a gentle swim. Maintain the required 10 ft distance from sea turtles and 50 ft from monk seals — federal law.',
+     tips:'The western sheltered cove (left side facing the ocean) is safest for swimming. Look for turtles resting on the rocks at the point between the two beach sections in the afternoon. The south shore sunset from this beach is spectacular — stay for it.'}
+  ]},
+
+  wed:{accent:'#7a40b0',numBg:'rgba(122,64,176,.1)',numBorder:'rgba(122,64,176,.5)',stops:[
+    {name:'Wailua Falls',emoji:'💦',type:'Iconic 80-Foot Double Waterfall',tag:'ICONIC',tagColor:'#dc2626',
+     time:'9:00 AM',duration:'9:00 – 10:00 AM',
+     img:'https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Wailua_Falls%2C_Kauai%2C_Hawaii%2C_USA.jpg/800px-Wailua_Falls%2C_Kauai%2C_Hawaii%2C_USA.jpg',
+     desc:'One of Hawaii\'s most photographed waterfalls — an 80-foot double-cascade plunging into a jade green pool surrounded by lush tropical jungle. Made famous by the opening credits of TV\'s Fantasy Island. The roadside overlook is so dramatic it barely seems real — and requires absolutely no hiking whatsoever.',
+     preg:'ok',pregNote:'Perfect pregnancy-safe waterfall experience — completely drive-up. A short flat path from the parking area to the viewpoint railing. Zero exertion for a completely spectacular result.',
+     tips:'Free to visit. Arrive early before tour buses. Just off Maalo Road — well signed from the highway. The falls are most powerful after recent rain. Don\'t attempt the steep unofficial trails down to the pool base — the county posts warnings for good reason.'},
+    {name:'Fern Grotto Riverboat Tour',emoji:'🌿',type:'Jungle River Boat · Ancient Lava Grotto',tag:'UNIQUE',tagColor:'#10b981',
+     time:'10:30 AM',duration:'10:30 AM – 12:30 PM',
+     img:'https://images.pexels.com/photos/2739664/pexels-photo-2739664.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Fern_Grotto_Wailua_River_Kauai.jpg/800px-Fern_Grotto_Wailua_River_Kauai.jpg',
+     desc:'A flat-bottomed riverboat glides up the Wailua River — the only navigable river in Hawaii — through dense jungle to a mystical lava cave draped floor-to-ceiling in hanging ferns. The Fern Grotto is a naturally air-conditioned cathedral of green that has been used as a Hawaiian wedding venue for decades. Peaceful, beautiful, and completely unique. From your list: this is the Fern Grotto river boat tour.',
+     preg:'ok',pregNote:'Excellent pregnancy activity. The boat is flat, the river is smooth, and there are no physical demands. The gangway to the grotto is accessible. One of the most relaxing and beautiful experiences on the island.',
+     tips:'Smith\'s Motorboat Service runs regular departures — book in advance online. Round trip is about 2 hours including the grotto visit. The guides do a cultural hula performance on the boat — genuinely lovely, not touristy.'},
+    {name:'Spinner Dolphins — Harbor Watch',emoji:'🐬',type:'Wild Spinner Dolphins · From the Shore',tag:'WILDLIFE',tagColor:'#0ea5e9',
+     time:'1:30 PM',duration:'1:30 – 2:30 PM',
+     img:'https://images.pexels.com/photos/1319519/pexels-photo-1319519.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Spinner_dolphin.jpg/800px-Spinner_dolphin.jpg',
+     desc:'Spinner dolphins are commonly spotted from the shore and from the harbor area near Nāwiliwili on Kauai\'s east side — often in large pods of 50–200 animals. From your list: "see dolphins" is the goal. Rather than a rough zodiac tour during pregnancy, the harbor viewpoint and the calm waters off Lihue give a genuinely great chance of a dolphin sighting with zero sea conditions involved.',
+     preg:'ok',pregNote:'Safe — shore-based dolphin watching requires no boats, no swells, and no physical demands. Spinner dolphins in Kauai\'s harbors and nearshore waters are a regular sight. Best chances are early morning or around midday when pods come close inshore.',
+     tips:'Nāwiliwili Harbor, Kalapakī Beach, and the rocky shoreline near Nāwiliwili Park are the best spots. Bring binoculars. If a pod comes close to shore the spinning leaps are unmistakable. A local boat from the harbor can also do a calm inshore dolphin watch if conditions allow — ask operators about sea state first.'},
+    {name:'Lydgate Beach — Protected Snorkel Lagoon',emoji:'🐠',type:'Enclosed Volcanic Lava Lagoon',tag:'SWIM',tagColor:'#0ea5e9',
+     time:'3:00 PM',duration:'3:00 – 5:00 PM',
+     img:'https://images.pexels.com/photos/3278215/pexels-photo-3278215.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Lydgate_Beach_Park_Kauai.jpg/800px-Lydgate_Beach_Park_Kauai.jpg',
+     desc:'Lydgate Beach has a unique natural lava rock barrier forming two completely enclosed calm snorkel lagoons — fully protected from all ocean swells and currents. Inside: crystal clear water with reef fish, eels, and sea turtles that come right up to you. One of the safest and most accessible snorkel experiences in Hawaii. From your list: this is the barefoot beach walk too — soft sand, calm water, no shoes needed.',
+     preg:'ok',pregNote:'One of the most pregnancy-safe snorkel spots in all of Hawaii. The enclosed lagoon has no waves, no currents, and calm shallow water. Gentle snorkeling is completely fine in early pregnancy. Simply wade in. The flat sandy beach is also perfect for a barefoot barefoot walk.',
+     tips:'Bring your own snorkel gear or rent nearby. The large lagoon has the most marine life — turtles visit regularly in the afternoon. Free to access, just pay for parking. Perfect place to spend the final afternoon of the trip.'},
+    {name:'East Coast — Final Kauai Sunset',emoji:'🌅',type:'Farewell to the Garden Isle',tag:'SUNSET',tagColor:'#f97316',
+     time:'~6:15 PM',duration:'Final sunset watch',
+     img:'https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg?auto=compress&cs=tinysrgb&w=800',
+     fb:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Sunset_at_wailua_beach_kauai.jpg/800px-Sunset_at_wailua_beach_kauai.jpg',
+     desc:'End the trip watching the sun set from the east coast near Kapa\'a — the Sleeping Giant ridge silhouetted against an amber sky, the ocean glittering below, and the green volcanic mountains of the island\'s interior lit in the very last rays. A quiet, beautiful farewell to the Garden Isle.',
+     preg:'ok',pregNote:'Completely safe and deeply relaxing. Find a beach access point along the Kapa\'a coastline, take off your shoes, walk on the sand, and watch. The Kapa\'a Beach Park has easy parking and a flat path right to the water.',
+     tips:'The Kapa\'a Beach Park and the coastal path near Kapa\'a town are perfect spots. Check the exact sunset time and arrive 20 min early. Bring a light jacket — it cools quickly after sunset on the east coast.'}
+  ]}
+};
+
+const pLabel={ok:'✓ SAFE',caution:'⚠ CAUTION'};
+const pClass={ok:'p-ok',caution:'p-cau'};
+const pBg={ok:'rgba(16,185,129,.08)',caution:'rgba(245,158,11,.08)'};
+const pBor={ok:'rgba(16,185,129,.25)',caution:'rgba(245,158,11,.25)'};
+const pCol={ok:'#0a7050',caution:'#9a6000'};
+
+function makeThumb(stop, container) {
+  const img = document.createElement('img');
+  img.alt = stop.name;
+  img.loading = 'lazy';
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block';
+  let tried = 0;
+  img.onerror = function() {
+    tried++;
+    if (tried === 1 && stop.fb) { img.src = stop.fb; }
+    else { img.remove(); container.textContent = stop.emoji; }
+  };
+  img.src = stop.img;
+  container.appendChild(img);
+}
+
+function buildStops() {
+  Object.entries(DAYS).forEach(([dayId, day]) => {
+    const container = document.getElementById('stops-' + dayId);
+    if (!container) return;
+    day.stops.forEach((stop, idx) => {
+      const card = document.createElement('button');
+      card.className = 'card';
+      card.onclick = () => openModal(stop);
+
+      const num = document.createElement('div');
+      num.className = 'cnum';
+      num.style.cssText = `background:${day.numBg};border:1.5px solid ${day.numBorder};color:${day.accent}`;
+      num.textContent = idx + 1;
+
+      const thumb = document.createElement('div');
+      thumb.className = 'cthumb';
+      makeThumb(stop, thumb);
+
+      const info = document.createElement('div');
+      info.className = 'cinfo';
+      info.innerHTML = `
+        <div class="cbadges">
+          <span class="ctag" style="background:${stop.tagColor}18;color:${stop.tagColor};border:1px solid ${stop.tagColor}44">${stop.tag}</span>
+          <span class="ctime">${stop.time}</span>
+          <span class="pbadge ${pClass[stop.preg]}">${pLabel[stop.preg]}</span>
+        </div>
+        <div class="cname">${stop.name}</div>
+        <div class="ctype">${stop.emoji} ${stop.type}</div>`;
+
+      const arrow = document.createElement('div');
+      arrow.className = 'carrow';
+      arrow.textContent = '›';
+
+      card.appendChild(num);
+      card.appendChild(thumb);
+      card.appendChild(info);
+      card.appendChild(arrow);
+      container.appendChild(card);
+    });
+  });
+}
+
+function openModal(stop) {
+  document.getElementById('memoji').textContent = stop.emoji;
+  const mimg = document.getElementById('mimg');
+  mimg.style.display = 'block';
+  let tried = 0;
+  mimg.onerror = function() {
+    tried++;
+    if (tried === 1 && stop.fb) { mimg.src = stop.fb; }
+    else { mimg.style.display = 'none'; }
+  };
+  mimg.src = stop.img;
+
+  const tag = document.getElementById('mtag');
+  tag.textContent = stop.tag;
+  tag.style.cssText = `background:${stop.tagColor}22;color:${stop.tagColor};border:1.5px solid ${stop.tagColor}55;font-size:10px;font-weight:600;padding:3px 10px;border-radius:6px;letter-spacing:.5px`;
+
+  document.getElementById('mtype').textContent = stop.emoji + ' ' + stop.type;
+  document.getElementById('mtitle').textContent = stop.name;
+  document.getElementById('mdur').textContent = '🕐 ' + stop.duration;
+  document.getElementById('mdesc').textContent = stop.desc;
+
+  const pe = document.getElementById('mpreg');
+  pe.style.cssText = `background:${pBg[stop.preg]};border:1.5px solid ${pBor[stop.preg]};border-radius:12px;padding:13px 16px;font-size:13px;line-height:1.65;font-weight:300;margin-bottom:16px`;
+  pe.innerHTML = `<div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:${pCol[stop.preg]};margin-bottom:7px;font-weight:600">🤰 Pregnancy (1–3 months) &nbsp;<span class="pbadge ${pClass[stop.preg]}">${pLabel[stop.preg]}</span></div>${stop.pregNote}`;
+
+  document.getElementById('mtips').textContent = stop.tips;
+
+  // Reset scroll position on modal
+  document.getElementById('modal-card').scrollTop = 0;
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function switchDay(dayId) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + dayId).classList.add('active');
+  const order = ['sun','mon','tue','wed','extra'];
+  const classMap = {sun:'a-sun',mon:'a-mon',tue:'a-tue',wed:'a-wed',extra:'a-extra'};
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.className = 'tab';
+    if (order[i] === dayId) t.classList.add(classMap[dayId]);
+  });
+}
+
+// Close on Escape key
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+buildStops();
+</script>
+
+</body>
+</html>
